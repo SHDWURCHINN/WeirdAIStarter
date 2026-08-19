@@ -1,0 +1,16 @@
+datasets
+gradio
+jupyter
+matplotlib
+nltk
+notebook
+numpy
+pandas
+pronouncing
+pyarrow
+pytest
+scikit-learn
+tokenizers
+torch
+tqdm
+transformers

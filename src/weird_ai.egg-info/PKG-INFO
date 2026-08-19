@@ -3,3 +3,21 @@ Name: weird-ai
 Version: 0.1.0
 Summary: Weird AI parody lyric generator
 Requires-Python: >=3.10
+License-File: LICENSE
+Requires-Dist: datasets
+Requires-Dist: gradio
+Requires-Dist: jupyter
+Requires-Dist: matplotlib
+Requires-Dist: nltk
+Requires-Dist: notebook
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: pronouncing
+Requires-Dist: pyarrow
+Requires-Dist: pytest
+Requires-Dist: scikit-learn
+Requires-Dist: tokenizers
+Requires-Dist: torch
+Requires-Dist: tqdm
+Requires-Dist: transformers
+Dynamic: license-file

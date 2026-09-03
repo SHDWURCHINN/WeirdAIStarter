@@ -21,10 +21,14 @@ class SimpleSelfAttention(nn.Module):
 
         # TODO:
         # 1. Compute attention scores using matrix multiplication.
+        attention_scores = x @ x.T
         # 2. Normalize scores with softmax.
+        attention_weights = torch.softmax(attention_scores, dim=-1)
         # 3. Compute context vectors as weighted sums of input vectors.
+        context_vectors = attention_weights @ x
 
-        raise NotImplementedError("Implement simple self-attention.")
+        return context_vectors, attention_weights
+
 
 class SelfAttention(nn.Module):
     """
@@ -50,11 +54,18 @@ class SelfAttention(nn.Module):
 
         # TODO:
         # 1. Compute queries, keys, and values.
+        Q = self.query(x)
+        K = self.key(x)
+        V = self.value(x)
         # 2. Compute scaled attention scores.
+        dk = K.shape[-1]
+        attention_scores = (Q @ K.T) / (dk ** 0.5)
         # 3. Apply softmax.
+        attention_weights = torch.softmax(attention_scores, dim=-1)
         # 4. Compute context vectors.
+        context_vectors = attention_weights @ V
 
-        raise NotImplementedError("Implement trainable self-attention.")
+        return context_vectors, attention_weights
 
 class CausalAttention(nn.Module):
     """
@@ -82,13 +93,23 @@ class CausalAttention(nn.Module):
         Returns:
             context_vectors: Tensor of shape (batch_size, num_tokens, output_dim)
         """
-
+        b, num_tokens, _ = x.shape
         # TODO:
         # 1. Compute keys, queries, and values.
+        Q = self.query(x)
+        K = self.key(x)
+        V = self.value(x)
         # 2. Compute scaled attention scores.
+        dk = K.shape[-1]
+        attention_scores = (Q @ K.transpose(1, 2)) / (dk ** 0.5)
         # 3. Mask future tokens.
+        mask = self.mask[:num_tokens, :num_tokens]
+        attention_scores = attention_scores.masked_fill(mask.bool(), float('-inf'))
         # 4. Apply softmax.
+        attention_weights = torch.softmax(attention_scores, dim=-1)
         # 5. Apply dropout.
+        attention_weights = self.dropout(attention_weights)
         # 6. Compute context vectors.
+        context_vectors = attention_weights @ V
 
-        raise NotImplementedError("Implement causal attention.")
+        return context_vectors

@@ -58,19 +58,15 @@ class LyricsClassificationDataset(Dataset):
         else:
             self.max_length = max_length
 
-        # TODO:
-        # Truncate every encoded text to self.max_length.
-
+        # Truncate every encoded text to self.max_length
         self.encoded_texts = [
-            None  # TODO: replace this line
+            encoded_text[:self.max_length]
             for encoded_text in self.encoded_texts
         ]
 
-        # TODO:
-        # Pad every encoded text so it has exactly self.max_length tokens.
-
+        # Pad every encoded text so it has exactly self.max_length tokens
         self.encoded_texts = [
-            None  # TODO: replace this line
+            encoded_text + [self.pad_token_id] * (self.max_length - len(encoded_text))
             for encoded_text in self.encoded_texts
         ]
 

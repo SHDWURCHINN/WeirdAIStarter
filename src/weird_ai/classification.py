@@ -51,13 +51,10 @@ class TinyLyricsClassifier(nn.Module):
 
         embeddings = self.embedding(input_ids)
 
-        # TODO:
-        # Average the embeddings across the token dimension.
-        # Hint:
+        # Average the embeddings across the token dimension (dim=1).
         # embeddings has shape (batch_size, num_tokens, emb_dim)
-        # We want pooled to have shape (batch_size, emb_dim)
-
-        pooled = None
+        # pooled will have shape (batch_size, emb_dim)
+        pooled = embeddings.mean(dim=1)
 
         logits = self.classifier(pooled)
 
@@ -89,17 +86,16 @@ def calculate_accuracy(data_loader, model, device):
 
             logits = model(input_batch)
 
-            # TODO:
-            # 1. Convert logits to predicted class IDs using argmax.
+            # 1. Convert logits to predicted class IDs using argmax along dimension 1.
+            predicted_labels = torch.argmax(logits, dim=1)
+
             # 2. Count how many predictions match label_batch.
-            # 3. Update correct and total.
+            correct += (predicted_labels == label_batch).sum().item()
 
-            predicted_labels = None
+            # 3. Update total count.
+            total += label_batch.size(0)
 
-            correct += None
-            total += None
-
-    return correct / total
+    return correct / total if total > 0 else 0.0
 
 
 def classify_text(text, model, tokenizer, max_length, device, pad_token_id=0):
@@ -122,16 +118,25 @@ def classify_text(text, model, tokenizer, max_length, device, pad_token_id=0):
 
     encoded = tokenizer.encode(text)
 
-    # TODO:
     # 1. Truncate encoded text to max_length.
-    # 2. Pad encoded text to max_length.
-    # 3. Convert encoded text to a tensor.
-    # 4. Add a batch dimension.
-    # 5. Move tensor to device.
-    # 6. Run model.
-    # 7. Use argmax to get predicted label.
+    encoded = encoded[:max_length]
 
-    predicted_label = None
+    # 2. Pad encoded text to max_length.
+    encoded = encoded + [pad_token_id] * (max_length - len(encoded))
+
+    # 3. Convert encoded text to a tensor.
+    tensor_input = torch.tensor(encoded, dtype=torch.long)
+
+    # 4. Add a batch dimension -> shape (1, max_length).
+    tensor_input = tensor_input.unsqueeze(0)
+
+    # 5. Move tensor to device.
+    tensor_input = tensor_input.to(device)
+
+    # 6. Run model forward pass and 7. Use argmax to get predicted label.
+    with torch.no_grad():
+        logits = model(tensor_input)
+        predicted_label = torch.argmax(logits, dim=1).item()
 
     return predicted_label
 

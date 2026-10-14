@@ -25,14 +25,17 @@ def build_reasoning_prompt(user_prompt):
         A formatted prompt string that includes the original task and asks for
         step-by-step reasoning.
     """
+    return f"""You are Weird AI.
+Think step-by-step.
+Original Request: {user_prompt}
 
-    # TODO:
-    # 1. Include a short role statement such as "You are Weird AI."
-    # 2. Include the phrase "Think step-by-step."
-    # 3. Include the original user_prompt.
-    # 4. Include a clear "Final Answer:" section.
+Please work on this by following the steps given here:
+1. Understand the user's request
+2. Identify important constraints
+3. Plan the response
+4. Produce the final answer
 
-    raise NotImplementedError("Implement build_reasoning_prompt.")
+Final Answer:"""
 
 
 def build_parody_reasoning_prompt(topic):
@@ -48,19 +51,18 @@ def build_parody_reasoning_prompt(topic):
     Returns:
         A formatted prompt string with step-by-step parody planning sections.
     """
+    return f"""You are Weird AI, a parody songwriter.
+Think step-by-step.
 
-    # TODO:
-    # Create a prompt that includes:
-    # 1. The phrase "Think step-by-step."
-    # 2. The topic provided by the user.
-    # 3. At least these planning steps:
-    #    - Identify the topic.
-    #    - Identify funny ideas or exaggerations.
-    #    - Identify possible rhymes.
-    #    - Write the final parody lyrics.
-    # 4. A clear "Final Parody:" section.
+Topic: {topic}
 
-    raise NotImplementedError("Implement build_parody_reasoning_prompt.")
+Please plan your parody using the following steps:
+- Identify the topic.
+- Identify funny ideas or exaggerations.
+- Identify possible rhymes.
+- Write the final parody lyrics.
+
+Final Parody:"""
 
 
 def build_closed_world_prompt(premises, question):
@@ -77,14 +79,16 @@ def build_closed_world_prompt(premises, question):
     Returns:
         A formatted prompt string for closed-world reasoning.
     """
+    formatted_premises = "\n".join([f"- {p}" for p in premises])
+    return f"""Instructions: Use only the provided premises. Do not use outside knowledge.
 
-    # TODO:
-    # 1. Tell the model to use only the provided premises.
-    # 2. Include each premise in a readable list.
-    # 3. Include the question.
-    # 4. Include a "Reasoning:" section and an "Answer:" section.
+Premises:
+{formatted_premises}
 
-    raise NotImplementedError("Implement build_closed_world_prompt.")
+Question: {question}
+
+Reasoning:
+Answer:"""
 
 
 def build_open_world_prompt(premises, question):
@@ -102,14 +106,13 @@ def build_open_world_prompt(premises, question):
     Returns:
         A formatted prompt string for open-world reasoning.
     """
+    formatted_premises = "\n".join([f"- {p}" for p in premises])
+    return f"""Instructions: You may use relevant background knowledge. Check whether the premises conflict with known facts.
 
-    # TODO:
-    # 1. Tell the model it may use relevant background knowledge.
-    # 2. Ask it to check whether the premises conflict with known facts.
-    # 3. Include each premise in a readable list.
-    # 4. Include the question.
-    # 5. Include a "Reasoning:" section and an "Answer:" section.
+Premises:
+{formatted_premises}
 
-    raise NotImplementedError("Implement build_open_world_prompt.")
+Question: {question}
 
-
+Reasoning:
+Answer:"""
